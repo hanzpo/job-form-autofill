@@ -1,0 +1,35 @@
+// Test applicant used by unit and end-to-end tests.
+const pdf = Buffer.from("%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n").toString("base64");
+
+export const PROFILE = {
+  profile: {
+    first_name: "Ada",
+    last_name: "Lovelace",
+    pronouns: "she/her",
+    email: "ada@example.com",
+    phone: "415-555-0100",
+    linkedin: "https://www.linkedin.com/in/ada",
+    github: "https://github.com/ada",
+    website: "https://ada.dev",
+    city: "San Francisco",
+    state: "CA",
+    country: "United States",
+    school: "Stanford University",
+    degree: "Bachelor of Science",
+    major: "Computer Science",
+    gpa: "3.9",
+    graduation_month: "May",
+    graduation_year: "2026",
+    current_company: "Analytical Engines Inc",
+    current_title: "Software Engineer",
+    citizenship: "United States",
+    past_employers: "Babbage Labs",
+    start_date: "June 2026",
+    how_heard: "LinkedIn",
+    gender: "Female",
+  },
+  workAuth: [{ country: "United States", sponsorship: "No" }],
+  customAnswers: [{ question: "Have you previously worked at Acme?", answer: "No" }],
+  files: { resume: { name: "Ada_Lovelace_Resume.pdf", type: "application/pdf", size: 80, data: pdf } },
+  settings: { useJev: false, fillWithoutClicking: false },
+};

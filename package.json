@@ -1,0 +1,21 @@
+{
+  "name": "job-form-autofill",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Safari web extension that autofills job applications, with Jev-powered field detection.",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "icons": "node scripts/make-icons.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "playwright": "^1.63.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-imask": "^7.6.1",
+    "react-international-phone": "^4.8.0",
+    "react-phone-input-2": "^2.15.1",
+    "react-phone-number-input": "^3.4.18",
+    "react-select": "^5.10.2"
+  }
+}

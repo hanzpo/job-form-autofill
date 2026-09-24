@@ -1,0 +1,605 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 110;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4FC5502430647CE4007C712E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC5502330647CE4007C712E /* AppDelegate.swift */; };
+		4FC5502830647CE4007C712E /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5502630647CE4007C712E /* Main.html */; };
+		4FC5502A30647CE4007C712E /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5502930647CE4007C712E /* Icon.png */; };
+		4FC5502C30647CE4007C712E /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5502B30647CE4007C712E /* Style.css */; };
+		4FC5502E30647CE4007C712E /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5502D30647CE4007C712E /* Script.js */; };
+		4FC5503030647CE4007C712E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC5502F30647CE4007C712E /* ViewController.swift */; };
+		4FC5503330647CE4007C712E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5503130647CE4007C712E /* Main.storyboard */; };
+		4FC5503530647CE5007C712E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5503430647CE5007C712E /* Assets.xcassets */; };
+		4FC5503C30647CE5007C712E /* Job Form Autofill Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4FC5503B30647CE5007C712E /* Job Form Autofill Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4FC5504130647CE5007C712E /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC5504030647CE5007C712E /* SafariWebExtensionHandler.swift */; };
+		4FC5505430647CE5007C712E /* options in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5504D30647CE5007C712E /* options */; };
+		4FC5505530647CE5007C712E /* popup in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5504E30647CE5007C712E /* popup */; };
+		4FC5505630647CE5007C712E /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5504F30647CE5007C712E /* background.js */; };
+		4FC5505730647CE5007C712E /* shared in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5505030647CE5007C712E /* shared */; };
+		4FC5505830647CE5007C712E /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5505130647CE5007C712E /* icons */; };
+		4FC5505930647CE5007C712E /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5505230647CE5007C712E /* manifest.json */; };
+		4FC5505A30647CE5007C712E /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FC5505330647CE5007C712E /* content.js */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4FC5503D30647CE5007C712E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4FC5501830647CE4007C712E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4FC5503A30647CE5007C712E;
+			remoteInfo = "Job Form Autofill Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4FC5504830647CE5007C712E /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				4FC5503C30647CE5007C712E /* Job Form Autofill Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		4FC5502030647CE4007C712E /* Job Form Autofill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Job Form Autofill.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FC5502330647CE4007C712E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4FC5502730647CE4007C712E /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Main.html; sourceTree = "<group>"; };
+		4FC5502930647CE4007C712E /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		4FC5502B30647CE4007C712E /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		4FC5502D30647CE4007C712E /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
+		4FC5502F30647CE4007C712E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4FC5503230647CE4007C712E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		4FC5503430647CE5007C712E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4FC5503630647CE5007C712E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4FC5503B30647CE5007C712E /* Job Form Autofill Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Job Form Autofill Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FC5504030647CE5007C712E /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		4FC5504230647CE5007C712E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4FC5504D30647CE5007C712E /* options */ = {isa = PBXFileReference; lastKnownFileType = folder; name = options; path = ../../../extension/options; sourceTree = "<group>"; };
+		4FC5504E30647CE5007C712E /* popup */ = {isa = PBXFileReference; lastKnownFileType = folder; name = popup; path = ../../../extension/popup; sourceTree = "<group>"; };
+		4FC5504F30647CE5007C712E /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = background.js; path = ../../../extension/background.js; sourceTree = "<group>"; };
+		4FC5505030647CE5007C712E /* shared */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shared; path = ../../../extension/shared; sourceTree = "<group>"; };
+		4FC5505130647CE5007C712E /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = ../../../extension/icons; sourceTree = "<group>"; };
+		4FC5505230647CE5007C712E /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = ../../../extension/manifest.json; sourceTree = "<group>"; };
+		4FC5505330647CE5007C712E /* content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = content.js; path = ../../../extension/content.js; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4FC5501D30647CE4007C712E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		4FC5503830647CE5007C712E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4FC5501730647CE4007C712E = {
+			isa = PBXGroup;
+			children = (
+				4FC5502230647CE4007C712E /* Job Form Autofill */,
+				4FC5503F30647CE5007C712E /* Job Form Autofill Extension */,
+				4FC5502130647CE4007C712E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4FC5502130647CE4007C712E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4FC5502030647CE4007C712E /* Job Form Autofill.app */,
+				4FC5503B30647CE5007C712E /* Job Form Autofill Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4FC5502230647CE4007C712E /* Job Form Autofill */ = {
+			isa = PBXGroup;
+			children = (
+				4FC5502330647CE4007C712E /* AppDelegate.swift */,
+				4FC5502F30647CE4007C712E /* ViewController.swift */,
+				4FC5503130647CE4007C712E /* Main.storyboard */,
+				4FC5503430647CE5007C712E /* Assets.xcassets */,
+				4FC5503630647CE5007C712E /* Info.plist */,
+				4FC5502530647CE4007C712E /* Resources */,
+			);
+			path = "Job Form Autofill";
+			sourceTree = "<group>";
+		};
+		4FC5502530647CE4007C712E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4FC5502630647CE4007C712E /* Main.html */,
+				4FC5502930647CE4007C712E /* Icon.png */,
+				4FC5502B30647CE4007C712E /* Style.css */,
+				4FC5502D30647CE4007C712E /* Script.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4FC5503F30647CE5007C712E /* Job Form Autofill Extension */ = {
+			isa = PBXGroup;
+			children = (
+				4FC5504C30647CE5007C712E /* Resources */,
+				4FC5504030647CE5007C712E /* SafariWebExtensionHandler.swift */,
+				4FC5504230647CE5007C712E /* Info.plist */,
+			);
+			path = "Job Form Autofill Extension";
+			sourceTree = "<group>";
+		};
+		4FC5504C30647CE5007C712E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4FC5504D30647CE5007C712E /* options */,
+				4FC5504E30647CE5007C712E /* popup */,
+				4FC5504F30647CE5007C712E /* background.js */,
+				4FC5505030647CE5007C712E /* shared */,
+				4FC5505130647CE5007C712E /* icons */,
+				4FC5505230647CE5007C712E /* manifest.json */,
+				4FC5505330647CE5007C712E /* content.js */,
+			);
+			name = Resources;
+			path = "Job Form Autofill Extension";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4FC5501F30647CE4007C712E /* Job Form Autofill */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4FC5504930647CE5007C712E /* Build configuration list for PBXNativeTarget "Job Form Autofill" */;
+			buildPhases = (
+				4FC5501C30647CE4007C712E /* Sources */,
+				4FC5501D30647CE4007C712E /* Frameworks */,
+				4FC5501E30647CE4007C712E /* Resources */,
+				4FC5504830647CE5007C712E /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4FC5503E30647CE5007C712E /* PBXTargetDependency */,
+			);
+			name = "Job Form Autofill";
+			productName = "Job Form Autofill";
+			productReference = 4FC5502030647CE4007C712E /* Job Form Autofill.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4FC5503A30647CE5007C712E /* Job Form Autofill Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4FC5504530647CE5007C712E /* Build configuration list for PBXNativeTarget "Job Form Autofill Extension" */;
+			buildPhases = (
+				4FC5503730647CE5007C712E /* Sources */,
+				4FC5503830647CE5007C712E /* Frameworks */,
+				4FC5503930647CE5007C712E /* Resources */,
+			);
+			buildRules = (
+			);
+			name = "Job Form Autofill Extension";
+			productName = "Job Form Autofill Extension";
+			productReference = 4FC5503B30647CE5007C712E /* Job Form Autofill Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4FC5501830647CE4007C712E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					4FC5501F30647CE4007C712E = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					4FC5503A30647CE5007C712E = {
+						CreatedOnToolsVersion = 27.0;
+					};
+				};
+			};
+			buildConfigurationList = 4FC5501B30647CE4007C712E /* Build configuration list for PBXProject "Job Form Autofill" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4FC5501730647CE4007C712E;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4FC5502130647CE4007C712E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4FC5501F30647CE4007C712E /* Job Form Autofill */,
+				4FC5503A30647CE5007C712E /* Job Form Autofill Extension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4FC5501E30647CE4007C712E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+				4FC5502A30647CE4007C712E /* Icon.png in Resources */,
+				4FC5503330647CE4007C712E /* Main.storyboard in Resources */,
+				4FC5502E30647CE4007C712E /* Script.js in Resources */,
+				4FC5502830647CE4007C712E /* Main.html in Resources */,
+				4FC5503530647CE5007C712E /* Assets.xcassets in Resources */,
+				4FC5502C30647CE4007C712E /* Style.css in Resources */,
+			);
+		};
+		4FC5503930647CE5007C712E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+				4FC5505430647CE5007C712E /* options in Resources */,
+				4FC5505730647CE5007C712E /* shared in Resources */,
+				4FC5505630647CE5007C712E /* background.js in Resources */,
+				4FC5505830647CE5007C712E /* icons in Resources */,
+				4FC5505930647CE5007C712E /* manifest.json in Resources */,
+				4FC5505A30647CE5007C712E /* content.js in Resources */,
+				4FC5505530647CE5007C712E /* popup in Resources */,
+			);
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4FC5501C30647CE4007C712E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				4FC5503030647CE4007C712E /* ViewController.swift in Sources */,
+				4FC5502430647CE4007C712E /* AppDelegate.swift in Sources */,
+			);
+		};
+		4FC5503730647CE5007C712E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				4FC5504130647CE5007C712E /* SafariWebExtensionHandler.swift in Sources */,
+			);
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4FC5503E30647CE5007C712E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4FC5503A30647CE5007C712E /* Job Form Autofill Extension */;
+			targetProxy = 4FC5503D30647CE5007C712E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4FC5502630647CE4007C712E /* Main.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4FC5502730647CE4007C712E /* Base */,
+			);
+			name = Main.html;
+			sourceTree = "<group>";
+		};
+		4FC5503130647CE4007C712E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4FC5503230647CE4007C712E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4FC5504330647CE5007C712E /* Debug configuration for PBXProject "Job Form Autofill" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4FC5504430647CE5007C712E /* Release configuration for PBXProject "Job Form Autofill" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		4FC5504630647CE5007C712E /* Debug configuration for PBXNativeTarget "Job Form Autofill Extension" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Job Form Autofill Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Job Form Autofill Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RJ86S4S435;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hanzpo.JobFormAutofill.Extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4FC5504730647CE5007C712E /* Release configuration for PBXNativeTarget "Job Form Autofill Extension" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Job Form Autofill Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Job Form Autofill Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RJ86S4S435;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hanzpo.JobFormAutofill.Extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		4FC5504A30647CE5007C712E /* Debug configuration for PBXNativeTarget "Job Form Autofill" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Job Form Autofill/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Job Form Autofill";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				INFOPLIST_KEY_NSViewGestureRecognizerIsExclusive = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RJ86S4S435;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hanzpo.JobFormAutofill;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4FC5504B30647CE5007C712E /* Release configuration for PBXNativeTarget "Job Form Autofill" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Job Form Autofill/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Job Form Autofill";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				INFOPLIST_KEY_NSViewGestureRecognizerIsExclusive = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RJ86S4S435;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hanzpo.JobFormAutofill;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4FC5501B30647CE4007C712E /* Build configuration list for PBXProject "Job Form Autofill" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FC5504330647CE5007C712E /* Debug configuration for PBXProject "Job Form Autofill" */,
+				4FC5504430647CE5007C712E /* Release configuration for PBXProject "Job Form Autofill" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		4FC5504530647CE5007C712E /* Build configuration list for PBXNativeTarget "Job Form Autofill Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FC5504630647CE5007C712E /* Debug configuration for PBXNativeTarget "Job Form Autofill Extension" */,
+				4FC5504730647CE5007C712E /* Release configuration for PBXNativeTarget "Job Form Autofill Extension" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		4FC5504930647CE5007C712E /* Build configuration list for PBXNativeTarget "Job Form Autofill" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FC5504A30647CE5007C712E /* Debug configuration for PBXNativeTarget "Job Form Autofill" */,
+				4FC5504B30647CE5007C712E /* Release configuration for PBXNativeTarget "Job Form Autofill" */,
+			);
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4FC5501830647CE4007C712E /* Project object */;
+	validationLevel = 1;
+}

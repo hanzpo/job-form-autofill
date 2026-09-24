@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Acme - Backend Engineer</title>
+<style>body { font-family: sans-serif; max-width: 700px; margin: 20px auto; } .application-question { margin: 10px 0; }
+input[type=radio], input[type=checkbox] { opacity: 0; position: absolute; }</style></head>
+<body>
+<form id="application-form">
+  <h4>Submit your application</h4>
+  <ul>
+    <li class="application-question">
+      <label><div class="application-label">Resume/CV<span class="required">✱</span></div>
+        <div class="application-field"><a class="visible-resume-upload">ATTACH RESUME/CV</a><input type="file" name="resume" id="resume-upload-input" style="display:none"></div></label>
+    </li>
+    <li class="application-question"><label><div class="application-label">Full name<span class="required">✱</span></div><div class="application-field"><input type="text" name="name" required></div></label></li>
+    <li class="application-question"><label><div class="application-label">Pronouns</div><div class="application-field"><input type="text" name="pronouns"></div></label></li>
+    <li class="application-question"><label><div class="application-label">Email<span class="required">✱</span></div><div class="application-field"><input type="email" name="email" required></div></label></li>
+    <li class="application-question"><label><div class="application-label">Phone</div><div class="application-field"><input type="text" name="phone"></div></label></li>
+    <li class="application-question"><label><div class="application-label">Current location</div><div class="application-field"><input type="text" name="location"></div></label></li>
+    <li class="application-question"><label><div class="application-label">Current company</div><div class="application-field"><input type="text" name="org"></div></label></li>
+  </ul>
+  <h4>Links</h4>
+  <ul>
+    <li class="application-question"><label><div class="application-label">LinkedIn URL</div><div class="application-field"><input type="text" name="urls[LinkedIn]"></div></label></li>
+    <li class="application-question"><label><div class="application-label">GitHub URL</div><div class="application-field"><input type="text" name="urls[GitHub]"></div></label></li>
+    <li class="application-question"><label><div class="application-label">Portfolio URL</div><div class="application-field"><input type="text" name="urls[Portfolio]"></div></label></li>
+  </ul>
+  <h4>Additional questions</h4>
+  <ul>
+    <li class="application-question">
+      <div class="application-label">Are you currently authorized to work in the country where this job is located?<span class="required">✱</span></div>
+      <div class="application-field"><ul>
+        <li><label><input type="radio" name="cards[abc][field0]" value="Yes"><span class="application-answer-alternative">Yes</span></label></li>
+        <li><label><input type="radio" name="cards[abc][field0]" value="No"><span class="application-answer-alternative">No</span></label></li>
+      </ul></div>
+    </li>
+    <li class="application-question">
+      <div class="application-label">When can you start?</div>
+      <div class="application-field"><input type="text" name="cards[abc][field1]"></div>
+    </li>
+    <li class="application-question">
+      <div class="application-label">Which of these languages have you used professionally?</div>
+      <div class="application-field"><ul>
+        <li><label><input type="checkbox" name="cards[abc][field2]" value="Go"><span>Go</span></label></li>
+        <li><label><input type="checkbox" name="cards[abc][field2]" value="Python"><span>Python</span></label></li>
+        <li><label><input type="checkbox" name="cards[abc][field2]" value="Rust"><span>Rust</span></label></li>
+      </ul></div>
+    </li>
+    <li class="application-question">
+      <label><input type="checkbox" name="consent" value="1"> I agree to the privacy policy</label>
+    </li>
+  </ul>
+  <h4>U.S. Equal Employment Opportunity information</h4>
+  <ul>
+    <li class="application-question"><div class="application-label">Gender</div>
+      <select name="eeo[gender]"><option value="">Select ...</option><option>Male</option><option>Female</option><option>Decline to self-identify</option></select></li>
+    <li class="application-question"><div class="application-label">Race</div>
+      <select name="eeo[race]"><option value="">Select ...</option><option>Asian (Not Hispanic or Latino)</option><option>White (Not Hispanic or Latino)</option><option>Decline to self-identify</option></select></li>
+    <li class="application-question"><div class="application-label">Veteran status</div>
+      <select name="eeo[veteran]"><option value="">Select ...</option><option>I am a veteran</option><option>I am not a veteran</option><option>Decline to self-identify</option></select></li>
+  </ul>
+</form>
+</body>
+</html>

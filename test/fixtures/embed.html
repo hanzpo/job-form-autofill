@@ -1,0 +1,9 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Careers at Acme</title></head>
+<body><h1>Careers at Acme</h1><p>Apply below.</p>
+<iframe id="grnhse_iframe" style="width:100%;height:1600px;border:0"></iframe>
+<script>
+  // Cross-origin embed like Greenhouse's job board iframe: swap localhost <-> 127.0.0.1.
+  const other = location.hostname === "localhost" ? "127.0.0.1" : "localhost";
+  document.getElementById("grnhse_iframe").src = `${location.protocol}//${other}:${location.port}/greenhouse.html`;
+</script></body></html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Job Form Autofill</title>
+  <link rel="stylesheet" href="../shared/ui.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Job Form Autofill</h1>
+      <div id="mode" class="muted"></div>
+    </div>
+    <button id="settings" class="link">Profile</button>
+  </header>
+
+  <div id="setup" class="notice" hidden>
+    Add your details first. <button class="link" id="setup-link">Set up profile →</button>
+  </div>
+
+  <button id="run" class="primary run">Autofill this page</button>
+
+  <div id="status" class="status muted" aria-live="polite"></div>
+  <div id="results"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

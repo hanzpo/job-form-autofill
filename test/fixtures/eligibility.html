@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Senior Engineer at Acme | Careers</title>
+<style>body { font-family: sans-serif; max-width: 700px; margin: 20px auto; } .field { margin: 10px 0; } label { display: block; }</style></head>
+<body>
+<h1>Senior Engineer</h1>
+<div class="job-location">Toronto, ON</div>
+<form id="apply" action="/apply">
+  <div class="field"><label for="first_name">First name</label><input id="first_name" name="first_name"></div>
+  <div class="field"><label for="email">Email</label><input id="email" type="email" name="email"></div>
+  <div class="field"><label for="phone">Phone (digits only)</label><input id="phone" type="tel" maxlength="10"></div>
+  <div class="field"><label for="resume">Resume</label><input id="resume" type="file"></div>
+
+  <div class="field"><label for="auth_here">Are you legally authorized to work in the country where this role is located?</label>
+    <select id="auth_here"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+  <div class="field"><label for="auth_us">Are you authorized to work in the United States?</label>
+    <select id="auth_us"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+  <div class="field"><label for="auth_us_nosp">Are you legally authorized to work in the U.S. without the need for visa sponsorship?</label>
+    <select id="auth_us_nosp"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+  <fieldset><legend>Will you require visa sponsorship to work in the UK?</legend>
+    <label><input type="radio" name="uk_sp" value="yes"> Yes</label>
+    <label><input type="radio" name="uk_sp" value="no"> No</label></fieldset>
+  <div class="field"><label for="citizen">Are you a U.S. citizen?</label>
+    <select id="citizen"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+  <div class="field"><label for="prev">Have you previously been employed by Acme or any of its subsidiaries?</label>
+    <select id="prev"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+  <div class="field"><label for="clearance">Do you hold an active security clearance?</label>
+    <select id="clearance"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+  <div class="field"><label for="source">How did you hear about this job?</label>
+    <select id="source"><option value="">Select…</option><option>Job Board</option><option>Referral</option><option>Other</option></select></div>
+  <div class="field"><label for="ambiguous">Work authorization status in the United States</label>
+    <select id="ambiguous"><option value="">Select…</option><option>Yes - citizen</option><option>Yes - visa holder</option><option>No</option></select></div>
+  <div class="field">
+    <p>Check <b>Yes</b> or <b>No</b> to indicate your agreement to receive text message updates from Rippling regarding your job application. Frequency may vary. Message and data rates may apply.</p>
+    <label><input type="radio" name="sms" value="yes"> Yes - I consent to receiving text messages</label>
+    <label><input type="radio" name="sms" value="no"> No - I do not consent to receiving text messages</label>
+  </div>
+  <div class="field"><label for="today">Today's date</label><input id="today" placeholder="MM/DD/YYYY"></div>
+  <div class="field"><label for="fav">What is your favorite programming language?</label><input id="fav"></div>
+  <div id="step2"></div>
+  <button type="button" id="next">Next</button>
+  <button type="submit" id="submit">Submit application</button>
+</form>
+<script>
+  window.submitted = false;
+  document.getElementById("apply").addEventListener("submit", (e) => { e.preventDefault(); window.submitted = true; });
+  // Multi-step: "Next" renders the voluntary disclosures step.
+  document.getElementById("next").addEventListener("click", () => {
+    document.getElementById("step2").innerHTML = `
+      <h2>Voluntary Self-Identification</h2>
+      <div class="field"><label for="gender">Gender</label>
+        <select id="gender"><option value="">Select…</option><option>Male</option><option>Female</option><option>I don't wish to answer</option></select></div>
+      <div class="field"><label for="veteran">Veteran status</label>
+        <select id="veteran"><option value="">Select…</option><option>I am not a protected veteran</option><option>I am a protected veteran</option><option>I don't wish to answer</option></select></div>`;
+  });
+</script>
+</body>
+</html>

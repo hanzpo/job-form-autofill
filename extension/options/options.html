@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Form Autofill · Profile</title>
+  <link rel="stylesheet" href="../shared/ui.css">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div>
+        <h1>Job Form Autofill</h1>
+        <p class="muted">Your details stay in this browser. Fill them once, then click “Autofill application” on any application (or use the toolbar button / ⌥⇧F).</p>
+      </div>
+      <span id="saved" class="saved muted" aria-live="polite"></span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="toc" id="toc"></nav>
+    <div class="content">
+      <div id="sections"></div>
+
+      <section class="card" id="section-work-authorization">
+        <h2>Work authorization</h2>
+        <p class="muted">List every country where you can work. Questions are answered for the country they name, or the job's country, or your home country. For any country not listed, the answers are “not authorized” and “will need sponsorship”.</p>
+        <div id="auth-list" class="auth-list"></div>
+        <button id="add-auth">Add country</button>
+      </section>
+
+      <section class="card" id="section-documents">
+        <h2>Documents</h2>
+        <p class="muted">Uploaded to file fields on the application. PDF recommended.</p>
+        <div class="files">
+          <div class="file-row" data-file="resume">
+            <div>
+              <div class="file-title">Resume</div>
+              <div class="file-name muted">No file</div>
+            </div>
+            <div class="file-actions">
+              <label class="button-like">Choose…<input type="file" accept=".pdf,.doc,.docx,.txt,.rtf" hidden></label>
+              <button class="remove" hidden>Remove</button>
+            </div>
+          </div>
+          <div class="file-row" data-file="cover_letter">
+            <div>
+              <div class="file-title">Cover letter <span class="muted">(optional)</span></div>
+              <div class="file-name muted">No file</div>
+            </div>
+            <div class="file-actions">
+              <label class="button-like">Choose…<input type="file" accept=".pdf,.doc,.docx,.txt,.rtf" hidden></label>
+              <button class="remove" hidden>Remove</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="section-saved-answers">
+        <h2>Saved answers</h2>
+        <p class="muted">Answers to recurring questions. When you answer a question yourself on an application and submit, it's added here automatically (marked <span class="tag">learned</span>). Edit or remove anything that shouldn't be reused.</p>
+        <div id="custom-list" class="custom-list"></div>
+        <button id="add-custom">Add answer</button>
+      </section>
+
+      <section class="card" id="section-jev">
+        <h2>Settings &amp; field detection</h2>
+        <p class="muted">
+          With a <a href="https://console.typesafe.ai" target="_blank" rel="noreferrer">TypeSafe</a> API key, each field is classified by Jev, which reads its label and context and picks the matching profile item or dropdown option.
+          Without a key, pattern matching is used. With Jev on, your profile values, relevant saved answers, and the job's title/company/location (not your files) are sent to TypeSafe for each autofill.
+        </p>
+        <div class="grid">
+          <label class="field span-2">
+            <span>TypeSafe API key</span>
+            <div class="row">
+              <input type="password" id="apiKey" autocomplete="off" spellcheck="false" placeholder="ts-…">
+              <button id="test-key">Test</button>
+            </div>
+            <small id="key-status" class="muted"></small>
+          </label>
+          <label class="field toggle">
+            <input type="checkbox" id="showButton">
+            <span>Show an “Autofill application” button when a form is detected</span>
+          </label>
+          <label class="field toggle">
+            <input type="checkbox" id="fillWithoutClicking">
+            <span>Fill automatically without clicking</span>
+          </label>
+          <label class="field toggle">
+            <input type="checkbox" id="learn">
+            <span>Learn answers I type myself</span>
+          </label>
+          <label class="field toggle">
+            <input type="checkbox" id="useJev">
+            <span>Use Jev when a key is set</span>
+          </label>
+          <label class="field toggle">
+            <input type="checkbox" id="overwrite">
+            <span>Overwrite fields that already have a value</span>
+          </label>
+          <label class="field">
+            <span>Minimum confidence to fill: <b id="minConfidenceValue"></b></span>
+            <input type="range" id="minConfidence" min="0.1" max="0.95" step="0.05">
+            <small class="muted">Below this, fields are outlined amber but left empty.</small>
+          </label>
+          <label class="field">
+            <span>Model</span>
+            <input type="text" id="model" placeholder="jev-latest">
+          </label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Backup</h2>
+        <p class="muted">Export everything, including documents, to a JSON file, or restore from one.</p>
+        <div class="row">
+          <button id="export">Export…</button>
+          <label class="button-like">Import…<input type="file" id="import" accept="application/json" hidden></label>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <template id="custom-row">
+    <div class="custom-row">
+      <input class="q" placeholder="Question (e.g. Are you open to working hybrid?)">
+      <input class="a" placeholder="Answer (e.g. Yes)">
+      <button class="remove" title="Remove">✕</button>
+      <small class="origin muted"></small>
+    </div>
+  </template>
+
+  <template id="auth-row">
+    <div class="auth-row">
+      <input class="country" placeholder="Country (e.g. United States)">
+      <select class="sponsorship">
+        <option value="No">No sponsorship needed</option>
+        <option value="Yes">Will need sponsorship (now or later)</option>
+      </select>
+      <button class="remove" title="Remove">✕</button>
+    </div>
+  </template>
+
+  <script src="../shared/schema.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

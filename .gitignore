@@ -1,0 +1,9 @@
+node_modules/
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.env
+test/.profile/
+test/fixtures/build/
+job-autofill-profile*.json
