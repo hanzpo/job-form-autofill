@@ -74,7 +74,7 @@ Each descriptor carries the label (resolved from `aria-labelledby`, `aria-label`
   - **Text and file fields:** "Which of the applicant's saved data items belongs in this field?" The options are the profile keys (e.g. `first_name`, `graduation_date`, `linkedin`), your saved answers, and `none`.
   - **Dropdowns, radios, and comboboxes:** "Given the applicant profile in `state`, which option should be selected?" The options are the field's own choices plus `none`.
 
-  Answers are validated, and each is gated on Jev's `confidence` (0.5 by default, adjustable). A low-confidence answer is still filled if the pattern matcher independently agrees. The field is left for you instead when:
+  Answers are validated, and each is gated on Jev's `confidence` (0.75 by default, adjustable). A low-confidence answer is still filled if the pattern matcher independently agrees. The field is left for you instead when:
   - a confident pattern match on a dropdown or radio lands on a different option than Jev picked
   - Jev says “none” but the rules found an answer
 - **Pattern matching** (`shared/schema.js`) uses ordered regexes over the label, `name`, `id`, and `autocomplete`, with exclusions for emergency contacts, referrers, middle names, and so on. It handles everything when there's no API key, if Jev errors, and for option lists too long for a Choice question (over 254 options).
@@ -88,7 +88,7 @@ Filling is written to work with React and other frameworks:
 - Comboboxes are opened and the matching option is clicked.
 - Files are filled first, because some ATSs parse the resume and prefill other fields from it.
 
-**Privacy:** everything is stored in `browser.storage.local`. With Jev on, your profile values and the page title and URL go to TypeSafe on each autofill. Your files are never sent.
+**Privacy:** the content script runs on every page (`<all_urls>`) so it can find application forms, including ones in cross-origin iframes. It fills only when you ask (or when you turn on filling without clicking), and with learning on it saves answers you type yourself when you submit. Everything is stored in `browser.storage.local`. With Jev on, your profile values and the page title and URL go to TypeSafe on each autofill. Your files are never sent.
 
 ## Tests
 
@@ -114,3 +114,7 @@ They run in heuristic mode and against a mock TypeSafe server.
 - Repeating sections ("Add another job/school") are not expanded. Only the entries already shown are filled.
 - Single consent checkboxes are deliberately left alone.
 - Closed shadow roots and canvas-based forms can't be read.
+
+## License
+
+[MIT](LICENSE) © 2026 Hanz Po

@@ -438,7 +438,7 @@
 					SafariServices,
 				);
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = RJ86S4S435;
+				DEVELOPMENT_TEAM = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hanzpo.JobFormAutofill.Extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -473,7 +473,7 @@
 					SafariServices,
 				);
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = RJ86S4S435;
+				DEVELOPMENT_TEAM = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hanzpo.JobFormAutofill.Extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -515,7 +515,7 @@
 					WebKit,
 				);
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = RJ86S4S435;
+				DEVELOPMENT_TEAM = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hanzpo.JobFormAutofill;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -558,7 +558,7 @@
 					WebKit,
 				);
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = RJ86S4S435;
+				DEVELOPMENT_TEAM = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hanzpo.JobFormAutofill;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;

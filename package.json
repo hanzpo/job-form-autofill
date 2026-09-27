@@ -2,6 +2,7 @@
   "name": "job-form-autofill",
   "private": true,
   "version": "1.0.0",
+  "license": "MIT",
   "description": "Safari web extension that autofills job applications, with Jev-powered field detection.",
   "scripts": {
     "test": "node --test test/*.test.mjs",
