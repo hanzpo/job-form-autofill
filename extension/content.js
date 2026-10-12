@@ -934,7 +934,7 @@
       .go:hover,.x:hover{background:rgba(255,255,255,.12)}
       .go:disabled{cursor:default;opacity:.85}
       .x{padding:11px 12px 11px 8px;opacity:.75;font-weight:400}
-    </style><div class="bar"><button class="go" id="jaf-autofill">⚡ Autofill application</button><button class="x" title="Dismiss" aria-label="Dismiss">✕</button></div>`;
+    </style><div class="bar"><button class="go" id="jaf-autofill">Autofill application</button><button class="x" title="Dismiss" aria-label="Dismiss">✕</button></div>`;
     const go = shadow.querySelector(".go");
     go.addEventListener("click", async () => {
       go.disabled = true;

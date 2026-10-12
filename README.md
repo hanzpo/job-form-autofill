@@ -4,7 +4,7 @@ A Safari web extension that detects the fields on a job application and fills th
 
 Field detection can use **[Jev](https://docs.typesafe.ai/introduction)**, TypeSafe's typed-decision model. Without an API key it falls back to built-in pattern matching.
 
-When it detects an application form, an **⚡ Autofill application** button appears in the bottom-right corner. Click it to fill the form. It reappears for each new step of multi-page forms like Workday. (Profile → Settings has an option to fill without clicking.) It never submits. Outlines show what happened:
+When it detects an application form, an **Autofill application** button appears in the bottom-right corner. Click it to fill the form. It reappears for each new step of multi-page forms like Workday. (Profile → Settings has an option to fill without clicking.) It never submits. Outlines show what happened:
 
 - **green:** filled
 - **amber:** unsure, left empty
@@ -37,7 +37,7 @@ The Xcode project references the files in `extension/` rather than copying them.
 
 ## Use it
 
-Open an application and click **⚡ Autofill application** (or the toolbar button, or **⌥⇧F**). The toolbar popup shows what was filled. The popup groups the results:
+Open an application and click **Autofill application** (or the toolbar button, or **⌥⇧F**). The toolbar popup shows what was filled. The popup groups the results:
 
 | Group | Meaning |
 | --- | --- |
