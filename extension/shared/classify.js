@@ -274,6 +274,11 @@
           .filter((o) => /^\s*yes\b/i.test(o.label) && /\bcitizen/i.test(o.label));
         if (citizen.length === 1) return { action: "option", optionIndex: citizen[0].index, display: citizen[0].label };
       }
+      // Searchable comboboxes (Greenhouse's school field) list only the first page of options:
+      // for free-text profile values, type the value and pick the matching suggestion instead.
+      if (field.kind === "combobox" && field.searchable && !BY_KEY[key]?.options) {
+        return { action: "text", value: raw, display: raw };
+      }
       return null;
     }
     const value = formatForField(key, raw, field, data);
@@ -314,6 +319,8 @@
         const hp = h ? planForKey(field, h.key, data, job) : null;
         const strongH = h && h.confidence >= 0.8 && hp;
         if (j.choice === NONE) {
+          // Jev can only pick from the options shown; a search plan isn't among them.
+          if (strongH && hp.action === "text") return { ...base, status: "fill", key: h.key, keyLabel: keyLabel(h.key), source: "heuristic", confidence: h.confidence, plan: hp };
           if (strongH) return { ...base, status: "uncertain", key: h.key, keyLabel: keyLabel(h.key), source: "heuristic", confidence: j.confidence, plan: hp, reason: "Jev found no answer; pattern match did" };
           return { ...base, status: "skip", source: "jev", confidence: j.confidence, reason: "not answerable from profile" };
         }

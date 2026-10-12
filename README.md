@@ -101,6 +101,7 @@ TYPESAFE_API_KEY=… npm test                # also runs live Jev against the fi
 The end-to-end tests load the same extension into headless Chromium, which runs the WebExtension APIs Safari does. They fill fixtures in `test/fixtures/`, and they also cover auto-run, multi-step forms, and learning:
 
 - a Greenhouse-style form
+- the current Greenhouse form (click-to-open react-selects, remote school search, labelled upload groups)
 - a Lever-style form
 - a real React + react-select app, including an async location autocomplete and a Workday-style listbox
 - a Greenhouse form embedded in a cross-origin iframe

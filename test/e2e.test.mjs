@@ -69,6 +69,10 @@ before(async () => {
     path.join(fixtures, "phone-app.jsx"), "--bundle", `--outfile=${path.join(fixtures, "build", "phone-app.js")}`,
     "--define:process.env.NODE_ENV=\"production\"", "--minify", "--loader:.css=empty", "--log-level=warning",
   ]);
+  execFileSync(path.join(root, "..", "node_modules", ".bin", "esbuild"), [
+    path.join(fixtures, "greenhouse-remix-app.jsx"), "--bundle", `--outfile=${path.join(fixtures, "build", "greenhouse-remix-app.js")}`,
+    "--define:process.env.NODE_ENV=\"production\"", "--minify", "--log-level=warning",
+  ]);
   server = http.createServer(serve);
   await new Promise((r) => server.listen(0, "127.0.0.1", r));
   base = `http://localhost:${server.address().port}`;
@@ -208,6 +212,32 @@ test("react + react-select form: controlled inputs, comboboxes, async autocomple
   await page.close();
 });
 
+test("current Greenhouse form: click-to-open react-selects, remote school search, upload group", async () => {
+  await setData();
+  const page = await open("greenhouse-remix.html");
+  const result = await autofill(page);
+  console.log(summarize(result));
+  assert.ok(!result.rows.some((r) => /unlabeled/.test(r.label)), "react-select's hidden required inputs aren't fields");
+  assert.ok(result.rows.some((r) => r.label === "Resume/CV"), "upload input takes the group's label, not “Attach”");
+  const state = JSON.parse(await page.locator("#state").textContent());
+  assert.deepEqual(state, {
+    first_name: "Ada",
+    last_name: "Lovelace",
+    email: "ada@example.com",
+    location: "San Francisco, California, United States",
+    resume: "Ada_Lovelace_Resume.pdf",
+    school: "Stanford University",
+    "degree--0": "Bachelor's Degree",
+    q_sponsorship: "No",
+    q_worked: "I have never worked at Acme",
+    q_pronouns: "She / Her",
+    gender: "Female",
+    hispanic_ethnicity: "Decline To Self Identify",
+    veteran_status: "I don't wish to answer",
+  });
+  await page.close();
+});
+
 test("cross-origin iframe embed", async () => {
   await setData();
   const page = await open("embed.html");
@@ -327,7 +357,7 @@ test("learns answers typed by the user and reuses them", async () => {
 
 test("live Jev (set TYPESAFE_API_KEY to run)", { skip: !process.env.TYPESAFE_API_KEY }, async () => {
   await setData({ settings: { useJev: true, apiKey: process.env.TYPESAFE_API_KEY } });
-  for (const file of ["greenhouse.html", "lever.html", "react.html", "eligibility.html", "phone.html"]) {
+  for (const file of ["greenhouse.html", "greenhouse-remix.html", "lever.html", "react.html", "eligibility.html", "phone.html"]) {
     const page = await open(file);
     const result = await autofill(page);
     console.log(`--- ${file} (${result.classifier}, ${result.ms}ms, ${result.jevRequests} requests, ${result.jevTokens} tokens)\n${summarize(result)}`);

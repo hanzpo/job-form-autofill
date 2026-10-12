@@ -92,7 +92,7 @@
     "graduation_month", "graduation_year", "graduation_date",
     "messaging_consent", "previously_employed", "is_citizen", "citizenship", "security_clearance", "non_compete", "felony",
     "sponsorship", "work_authorization", "over_21", "over_18", "relocate", "onsite",
-    "hispanic_latino", "race", "gender", "veteran", "disability", "pronouns",
+    "pronouns", "hispanic_latino", "race", "gender", "veteran", "disability",
     "how_heard", "salary", "start_date", "today", "years_experience",
     "past_employers", "current_company", "current_title",
     "school", "degree", "major", "gpa",

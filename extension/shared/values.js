@@ -337,6 +337,7 @@
       if (wanted.has(label) || (value && wanted.has(value))) score = 1;
       else if (isYes && /^yes\b/.test(label)) score = 0.9;
       else if (isNo && /^no\b/.test(label)) score = 0.9;
+      else if (isNo && /^(i )?(have )?never\b/.test(label)) score = 0.85;
       else if (isDecline && DECLINE_RE.test(label)) score = 0.9;
       else if (!isDecline && DECLINE_RE.test(label)) score = 0;
       else if (wantedDegree && degreeLevel(opt.label) === wantedDegree) score = 0.85;

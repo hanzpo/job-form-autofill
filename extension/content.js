@@ -12,6 +12,7 @@
 
   const SKIP_INPUT_TYPES = new Set(["hidden", "submit", "button", "image", "reset", "password", "range", "color", "search"]);
   const CONTROL_SELECTOR = "input, textarea, select, [role=combobox], button[aria-haspopup=listbox], [role=radio]";
+  const GENERIC_UPLOAD_LABEL = /^(attach|upload|browse|choose|select|add)( an?| your)?( files?| documents?)?$/i;
   const PLACEHOLDER_OPTION = /^\s*(select|choose|please select|pick|--|—|-)\b|^\s*$/i;
 
   let nextId = 1;
@@ -148,6 +149,11 @@
     return /^\+\d{1,4}[\s-]*$/.test(el.value || "");
   }
 
+  /** Hidden inputs that only exist to trigger native "required" validation (react-select). */
+  function isValidationProxy(el) {
+    return el.matches("input") && el.getAttribute("aria-hidden") === "true" && el.tabIndex < 0;
+  }
+
   function textHasValue(el) {
     return el.value.trim() !== "" && !isDialCodeOnly(el);
   }
@@ -228,10 +234,12 @@
       const t = clean(el.textContent);
       return t && !PLACEHOLDER_OPTION.test(t) ? t : "";
     }
-    // react-select and similar show the current value in a sibling element.
+    // react-select and similar show the current value in a sibling element. Stop climbing
+    // before reaching a container that holds another field, or we'd read its value instead.
     let node = el;
     for (let i = 0; i < 4 && node.parentElement; i++) {
       node = node.parentElement;
+      if ([...node.querySelectorAll("input:not([type=hidden]), select, textarea, [role=combobox]")].some((c) => c !== el && !c.contains(el) && !isValidationProxy(c))) break;
       const single = node.querySelector("[class*=single-value], [class*=singleValue], [class*=multi-value], [class*=multiValue]");
       if (single && clean(single.textContent)) return clean(single.textContent);
     }
@@ -260,16 +268,27 @@
     return null;
   }
 
+  function pointerClick(el, prefix = []) {
+    for (const type of [...prefix, "pointerdown", "mousedown", "pointerup", "mouseup"]) {
+      const Ctor = type.startsWith("pointer") && typeof PointerEvent === "function" ? PointerEvent : MouseEvent;
+      el.dispatchEvent(new Ctor(type, { bubbles: true, cancelable: true, button: 0, view: window }));
+    }
+    el.click();
+  }
+
   async function openCombobox(target) {
     const before = new Set(visibleOptions());
     target.focus();
     if (target.matches("button")) {
       target.click();
-    } else {
-      target.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, button: 0 }));
-      target.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowDown", code: "ArrowDown", keyCode: 40 }));
+      return waitForOptions(target, before, 450);
     }
-    return waitForOptions(target, before, 450);
+    // Some widgets (Greenhouse's react-select) only open on a full pointer + click sequence.
+    pointerClick(target);
+    const opts = await waitForOptions(target, before, 450);
+    if (opts.length) return opts;
+    target.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowDown", code: "ArrowDown", keyCode: 40 }));
+    return waitForOptions(target, before, 300);
   }
 
   async function waitForOptions(target, before, timeout) {
@@ -312,6 +331,7 @@
       if (consumed.has(el)) continue;
       if (el.closest("[data-jaf-ui]")) continue;
       if (el.disabled || el.getAttribute("aria-disabled") === "true") continue;
+      if (isValidationProxy(el)) continue;
 
       const tag = el.tagName;
       const type = (el.getAttribute("type") || "").toLowerCase();
@@ -348,7 +368,14 @@
           continue;
         }
         if (type === "file") {
-          const label = labelFor(el) || textWithoutControls(el.closest("div, section, fieldset")?.parentElement);
+          // Upload widgets often label the input with its button text ("Attach"); the field's
+          // name is on the surrounding group instead.
+          let label = labelFor(el);
+          if (!label || GENERIC_UPLOAD_LABEL.test(label)) {
+            const group = el.closest("[role=group][aria-labelledby], fieldset");
+            label = (group && (textOfIds(group.getAttribute("aria-labelledby"), group.ownerDocument) || groupQuestion([], group)))
+              || textWithoutControls(el.closest("div, section, fieldset")?.parentElement) || label;
+          }
           fields.push({ ...fieldBase(el, clean(label).slice(0, 200), sectionOf), kind: "file", hasValue: el.files?.length > 0 });
           registry.set(idFor(el), { kind: "file", el });
           continue;
@@ -424,7 +451,8 @@
           closeCombobox(target);
         }
       }
-      fields.push({ ...fieldBase(target, label, sectionOf), kind: "combobox", options, hasValue });
+      const searchable = target.matches("input") && !target.readOnly;
+      fields.push({ ...fieldBase(target, label, sectionOf), kind: "combobox", options, hasValue, searchable });
       registry.set(idFor(target), { kind: "combobox", el: target, options });
     }
     if (active && active !== document.body && active.focus) active.focus();
@@ -602,11 +630,7 @@
 
   function clickOption(option) {
     option.scrollIntoView({ block: "nearest" });
-    for (const type of ["pointerover", "mouseover", "pointerdown", "mousedown", "pointerup", "mouseup"]) {
-      const Ctor = type.startsWith("pointer") && typeof PointerEvent === "function" ? PointerEvent : MouseEvent;
-      option.dispatchEvent(new Ctor(type, { bubbles: true, cancelable: true, button: 0 }));
-    }
-    option.click();
+    pointerClick(option, ["pointerover", "mouseover"]);
   }
 
   async function fillCombobox(entry, plan) {
@@ -628,26 +652,42 @@
       clickOption(match);
       await sleep(60);
       target.blur();
-      return comboboxHasValue(target) || norm(target.value || target.textContent).includes(wanted);
+      const now = norm(comboboxValue(target) || (target.matches("button") ? target.textContent : ""));
+      return Boolean(now) && (now === wanted || now.includes(wanted) || wanted.includes(now));
     }
     // Free-text combobox (autocomplete): type the value, then pick the best suggestion.
     const value = plan.value;
     const before = new Set(visibleOptions());
     target.focus();
-    setNativeValue(target, value);
-    fire(target, "input");
-    const options = await waitForOptions(target, before, 2500);
+    if (target.matches("input")) {
+      pointerClick(target);
+      // A real editing command first: some autocompletes (Greenhouse's location field) ignore a
+      // value set from script and only search on typed input.
+      if (!insertText(target, value) || target.value !== value) {
+        setNativeValue(target, value);
+        fire(target, "input");
+      }
+    }
+    const options = (await waitForOptions(target, before, 2500)).filter((o) => !before.has(o));
     if (!options.length) {
       fire(target, "change");
-      return target.value === value;
+      target.blur();
+      await sleep(60);
+      // Select-style widgets drop typed text that wasn't picked from the list.
+      return Boolean(comboboxValue(target));
     }
     const wantedTokens = new Set(norm(value).split(/[\s,]+/).filter(Boolean));
-    const score = (o) => norm(o.textContent).split(/[\s,]+/).filter((t) => wantedTokens.has(t)).length;
+    const score = (o) => new Set(norm(o.textContent).split(/[\s,]+/).filter((t) => wantedTokens.has(t))).size;
     const best = options.reduce((a, b) => (score(b) > score(a) ? b : a), options[0]);
+    // Don't settle for an unrelated suggestion (e.g. the first school in the list).
+    if (score(best) < Math.ceil(wantedTokens.size / 2)) {
+      closeCombobox(target);
+      return false;
+    }
     clickOption(best);
     await sleep(60);
     target.blur();
-    return true;
+    return Boolean(comboboxValue(target));
   }
 
   const HIGHLIGHT = { filled: "#22c55e", uncertain: "#f59e0b", failed: "#ef4444", needs: "#3b82f6" };
@@ -849,7 +889,7 @@
   let autoMode = "button";
 
   function autoCandidates() {
-    return deepQueryAll(AUTO_SELECTOR).filter((el) => !el.closest("[data-jaf-ui]") && (el.type === "file" || isVisible(el)));
+    return deepQueryAll(AUTO_SELECTOR).filter((el) => !el.closest("[data-jaf-ui]") && !isValidationProxy(el) && (el.type === "file" || isVisible(el)));
   }
 
   function markAllSeen() {
