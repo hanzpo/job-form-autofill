@@ -14,6 +14,11 @@
   const CONTROL_SELECTOR = "input, textarea, select, [role=combobox], button[aria-haspopup=listbox], [role=radio]";
   const GENERIC_UPLOAD_LABEL = /^(attach|upload|browse|choose|select|add)( an?| your)?( files?| documents?)?$/i;
   const PLACEHOLDER_OPTION = /^\s*(select|choose|please select|pick|--|—|-)\b|^\s*$/i;
+  const COMBO_HINT = /(^|[^a-z])(select(?!ed|ion)|dropdown|drop-down|combo|autocomplete|auto-complete|typeahead|type-ahead|suggest|picker|chooser|lookup)/i;
+  const NOT_COMBO = /date|time|color|phone|tel-input/i;
+  const COMBO_PLACEHOLDER = /^\s*(search|select|choose|start typing|type to search)\b/i;
+  const LOOSE_OPTION = "[class*=menu] [class*=option], [class*=dropdown] li, [class*=suggest] li, [class*=results] li, [class*=listbox] li, [class*=autocomplete] li, [class*=options] > *, [data-automation-id=promptOption]";
+  const SELECTED_VALUE = "[class*=single-value], [class*=singleValue], [class*=multi-value], [class*=multiValue], [class*=selected-item], [class*=selectedItem], [data-automation-id=selectedItem]";
 
   let nextId = 1;
   const idOf = new WeakMap();
@@ -222,6 +227,22 @@
     return clean(el.parentElement?.textContent) || el.value || "";
   }
 
+  /** Plain inputs that are really the search box or face of a custom dropdown. */
+  function comboHint(el) {
+    const popup = (el.getAttribute("aria-haspopup") || "").toLowerCase();
+    if (popup && popup !== "false" && popup !== "dialog") return true;
+    if (el.hasAttribute("aria-expanded") || el.hasAttribute("aria-controls") || el.hasAttribute("aria-owns")) return true;
+    if (COMBO_PLACEHOLDER.test(el.placeholder || "")) return true;
+    let node = el;
+    for (let i = 0; i < 4 && node && node !== document.body; i++, node = node.parentElement) {
+      if (i > 0 && [...node.querySelectorAll("input:not([type=hidden]), select, textarea")].some((c) => c !== el && !isValidationProxy(c))) break;
+      const marks = `${node.getAttribute("class") || ""} ${node.getAttribute("data-automation-id") || ""} ${node.getAttribute("data-testid") || ""}`;
+      if (NOT_COMBO.test(marks)) return false;
+      if (COMBO_HINT.test(marks)) return true;
+    }
+    return false;
+  }
+
   function comboboxTarget(el) {
     // ARIA 1.1 pattern: role=combobox on a wrapper that contains the text input.
     if (el.matches("input, button")) return el;
@@ -240,7 +261,7 @@
     for (let i = 0; i < 4 && node.parentElement; i++) {
       node = node.parentElement;
       if ([...node.querySelectorAll("input:not([type=hidden]), select, textarea, [role=combobox]")].some((c) => c !== el && !c.contains(el) && !isValidationProxy(c))) break;
-      const single = node.querySelector("[class*=single-value], [class*=singleValue], [class*=multi-value], [class*=multiValue]");
+      const single = node.querySelector(SELECTED_VALUE);
       if (single && clean(single.textContent)) return clean(single.textContent);
     }
     return "";
@@ -254,7 +275,9 @@
     const scope = root || document;
     let found = [...scope.querySelectorAll("[role=option]")].filter(isVisible);
     if (!found.length && !root) {
-      found = [...document.querySelectorAll("[class*=menu] [class*=option]")].filter(isVisible);
+      found = [...document.querySelectorAll(LOOSE_OPTION)]
+        .filter((o) => isVisible(o) && clean(o.textContent) && !o.closest("[data-jaf-ui]") && !o.querySelector("input, select, textarea"));
+      found = found.filter((o) => !found.some((x) => x !== o && o.contains(x)));
     }
     return found;
   }
@@ -350,6 +373,12 @@
         consumed.add(target);
         if (!isVisible(el)) continue;
         comboboxes.push({ el, target });
+        continue;
+      }
+
+      const textLike = tag === "INPUT" && !["radio", "checkbox", "file"].includes(type) && (!SKIP_INPUT_TYPES.has(type) || type === "search");
+      if (textLike && comboHint(el)) {
+        if (isVisible(el)) comboboxes.push({ el, target: el });
         continue;
       }
 
@@ -570,11 +599,15 @@
 
   async function fillText(el, value) {
     const stuck = () => sameText(el.value, value);
+    const before = new Set(visibleOptions());
     el.focus();
     setNativeValue(el, value);
     fire(el, "input");
     fire(el, "change");
     if (!stuck()) insertText(el, value);
+    await sleep(60);
+    const popup = newOptions(el, before);
+    if (popup.length) return pickSuggestion(el, value, popup) && "picked";
     el.blur();
     fire(el, "focusout");
     // Controlled inputs that didn't register the change revert on the next render.
@@ -633,6 +666,42 @@
     pointerClick(option, ["pointerover", "mouseover"]);
   }
 
+  function newOptions(target, before) {
+    const lb = listboxFor(target);
+    return (lb ? visibleOptions(lb) : visibleOptions()).filter((o) => !before.has(o));
+  }
+
+  const tokens = (s) => clean(s).toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+
+  /** The suggestion that best matches value, or null if none shares enough of its words. */
+  function bestSuggestion(options, value) {
+    const wanted = new Set(tokens(value));
+    if (!wanted.size) return null;
+    const exact = options.find((o) => clean(o.textContent).toLowerCase() === clean(value).toLowerCase());
+    if (exact) return exact;
+    let best = null;
+    let bestScore = [0, 0];
+    for (const o of options) {
+      const t = tokens(o.textContent);
+      const hits = new Set(t.filter((w) => wanted.has(w))).size;
+      const score = [hits, -t.length];
+      if (score[0] > bestScore[0] || (score[0] === bestScore[0] && score[1] > bestScore[1])) { best = o; bestScore = score; }
+    }
+    return bestScore[0] >= Math.ceil(wanted.size / 2) ? best : null;
+  }
+
+  async function pickSuggestion(target, value, options) {
+    const best = bestSuggestion(options, value);
+    if (!best) {
+      closeCombobox(target);
+      return false;
+    }
+    clickOption(best);
+    await sleep(60);
+    target.blur();
+    return Boolean(comboboxValue(target));
+  }
+
   async function fillCombobox(entry, plan) {
     const target = entry.el;
     const norm = (s) => clean(s).toLowerCase();
@@ -641,11 +710,14 @@
       const find = (options) => options.find((o) => norm(o.textContent) === wanted)
         || options.find((o) => norm(o.textContent).startsWith(wanted));
       let match = find(await openCombobox(target));
-      if (!match && target.matches("input")) {
+      if (!match && target.matches("input") && !target.readOnly) {
         // Long or lazily rendered menus: type to filter, then look again.
         const before = new Set(visibleOptions());
-        setNativeValue(target, entry.options[plan.optionIndex].label);
-        fire(target, "input");
+        const label = entry.options[plan.optionIndex].label;
+        if (!insertText(target, label) || target.value !== label) {
+          setNativeValue(target, label);
+          fire(target, "input");
+        }
         match = find(await waitForOptions(target, before, 1500)) || find(visibleOptions());
       }
       if (!match) { closeCombobox(target); return false; }
@@ -676,18 +748,7 @@
       // Select-style widgets drop typed text that wasn't picked from the list.
       return Boolean(comboboxValue(target));
     }
-    const wantedTokens = new Set(norm(value).split(/[\s,]+/).filter(Boolean));
-    const score = (o) => new Set(norm(o.textContent).split(/[\s,]+/).filter((t) => wantedTokens.has(t))).size;
-    const best = options.reduce((a, b) => (score(b) > score(a) ? b : a), options[0]);
-    // Don't settle for an unrelated suggestion (e.g. the first school in the list).
-    if (score(best) < Math.ceil(wantedTokens.size / 2)) {
-      closeCombobox(target);
-      return false;
-    }
-    clickOption(best);
-    await sleep(60);
-    target.blur();
-    return Boolean(comboboxValue(target));
+    return pickSuggestion(target, value, options);
   }
 
   const HIGHLIGHT = { filled: "#22c55e", uncertain: "#f59e0b", failed: "#ef4444", needs: "#3b82f6" };
@@ -768,6 +829,7 @@
         else if (plan.action === "text") {
           item.expected = textValueFor(entry.el, plan.value, item.key);
           ok = await fillText(entry.el, item.expected);
+          if (ok === "picked") { entry.picked = true; ok = true; }
         }
         if (!ok) error = "value didn't stick";
       } catch (e) {
@@ -787,7 +849,7 @@
    * retype lost values keystroke by keystroke, and report anything still lost as failed.
    */
   async function verifyTextFills(results) {
-    const texts = results.filter((r) => r.ok && r.item.plan?.action === "text" && registry.get(r.id)?.kind === "text");
+    const texts = results.filter((r) => r.ok && r.item.plan?.action === "text" && registry.get(r.id)?.kind === "text" && !registry.get(r.id).picked);
     if (!texts.length) return;
     await sleep(400);
     const lost = texts.filter((r) => !sameText(registry.get(r.id).el.value, expectedFor(r)));

@@ -238,6 +238,20 @@ test("current Greenhouse form: click-to-open react-selects, remote school search
   await page.close();
 });
 
+test("plain inputs that are really dropdowns or search boxes for one", async () => {
+  await setData();
+  const page = await open("custom-dropdowns.html");
+  const result = await autofill(page);
+  console.log(summarize(result));
+  const v = (sel) => page.locator(sel).inputValue();
+  assert.equal(await v("#first_name"), "Ada");
+  assert.equal(await v("#company"), "Analytical Engines Inc");
+  assert.equal(await v("#country"), "United States");
+  assert.equal(await v("#school"), "Stanford University (Stanford, CA)");
+  assert.equal(await v("#source"), "LinkedIn");
+  await page.close();
+});
+
 test("cross-origin iframe embed", async () => {
   await setData();
   const page = await open("embed.html");

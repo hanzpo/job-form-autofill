@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Apply | Careers</title>
+<style>
+  body { font-family: sans-serif; max-width: 600px; margin: 20px auto; }
+  .field { margin: 12px 0; position: relative; }
+  label { display: block; }
+  ul, .options { list-style: none; margin: 0; padding: 0; border: 1px solid #ccc; position: absolute; background: #fff; width: 300px; z-index: 1; }
+  li, .options > div { padding: 4px 8px; cursor: pointer; }
+  [hidden] { display: none; }
+</style></head>
+<body>
+<form id="apply">
+  <div class="field"><label for="first_name">First name</label><input id="first_name"></div>
+  <div class="field"><label for="company">Current company</label><input id="company"></div>
+
+  <div class="field"><label for="country">Country</label>
+    <div class="custom-dropdown"><input id="country" autocomplete="off"><ul class="dropdown-menu" hidden></ul></div></div>
+
+  <div class="field"><label for="school">School</label>
+    <div><input id="school" autocomplete="off"><ul class="suggestions" hidden></ul></div></div>
+
+  <div class="field"><label for="source">How did you hear about us?</label>
+    <div class="select-wrapper"><input id="source" readonly placeholder="Select…"><div class="options" hidden></div></div></div>
+</form>
+<script>
+  function strictList(input, list, items, { openOnFocus, itemTag = "li", filter = true }) {
+    let picked = false;
+    const render = () => {
+      const q = filter && !input.readOnly ? input.value.toLowerCase() : "";
+      list.innerHTML = "";
+      for (const item of items.filter((i) => i.toLowerCase().includes(q))) {
+        const el = document.createElement(itemTag);
+        el.textContent = item;
+        el.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          input.value = item;
+          picked = true;
+          list.hidden = true;
+        });
+        list.appendChild(el);
+      }
+      list.hidden = !list.children.length;
+    };
+    if (openOnFocus) {
+      input.addEventListener("focus", render);
+      input.addEventListener("click", render);
+    }
+    input.addEventListener("input", () => { picked = false; input.value ? render() : (list.hidden = true); });
+    input.addEventListener("keydown", (e) => { if (e.key === "Escape") list.hidden = true; });
+    input.addEventListener("blur", () => {
+      list.hidden = true;
+      if (!picked) input.value = "";
+    });
+  }
+  const $ = (id) => document.getElementById(id);
+  strictList($("country"), $("country").nextElementSibling, ["Canada", "United Kingdom", "United States"], { openOnFocus: true });
+  strictList($("school"), $("school").nextElementSibling, ["Stanford Health Care", "Stanford University (Stanford, CA)", "University of Toronto"], { openOnFocus: false });
+  strictList($("source"), $("source").nextElementSibling, ["Job board", "LinkedIn", "Referral"], { openOnFocus: true, itemTag: "div" });
+</script>
+</body>
+</html>
