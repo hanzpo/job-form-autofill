@@ -53,7 +53,7 @@ function itemEl(row, { showValue = true } = {}) {
   meta.className = "muted";
   // Heuristic confidences are fixed priors, not measurements: only show Jev's.
   const isJev = row.source.startsWith("jev");
-  meta.textContent = [isJev ? row.source.replace("jev+heuristic", "jev ✓ pattern") : row.source && "pattern", isJev && pct(row.confidence)]
+  meta.textContent = [isJev ? row.source.replace("jev+heuristic", "jev + pattern") : row.source && "pattern", isJev && pct(row.confidence)]
     .filter(Boolean).join(" · ");
   el.append(label, meta);
   const detail = row.value && showValue
