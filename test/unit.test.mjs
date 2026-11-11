@@ -218,3 +218,11 @@ test("place names match their short forms", () => {
   assert.deepEqual(placeAliases("canada"), ["ca", "can"]);
   assert.deepEqual(placeAliases("California"), ["ca"]);
 });
+
+test("current company left blank clears a prefilled field", () => {
+  const { decide } = globalThis.JAF_CLASSIFY;
+  const field = { uid: "0_1", id: "1", kind: "text", label: "Current company", hasValue: true };
+  const [d] = decide([field], { profile: { first_name: "A" }, settings: {} }, null, {});
+  assert.equal(d.status, "fill");
+  assert.equal(d.plan.action, "clear");
+});

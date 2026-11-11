@@ -253,12 +253,16 @@
   const SOURCE_FALLBACKS = ["LinkedIn", "Job Board", "Online Job Board", "Job Posting", "Online Job Posting", "Internet", "Job Search Website", "Company Website", "Careers Website", "Career Site", "Website"];
 
   /** Build a fill instruction for a field given a profile key (text-like) or option index. */
+  const CLEAR_WHEN_BLANK = new Set(["current_company", "current_title"]);
+
   function planForKey(field, key, data, job) {
     if (field.kind === "file") {
       const file = data.files?.[key];
       return file?.data ? { action: "file", fileKey: key, display: file.name } : null;
     }
     const raw = resolve(key, data, { field, job });
+    // Left blank on purpose: ATSs prefill these from the resume (an old employer), so empty them.
+    if (!raw && CLEAR_WHEN_BLANK.has(key) && (field.kind === "text" || field.kind === "textarea")) return { action: "clear", display: "(left blank)" };
     if (!raw) return null;
     if (isOptionField(field)) {
       const candidates = key === "how_heard" ? [raw, ...SOURCE_FALLBACKS] : [raw];
@@ -306,7 +310,10 @@
 
     return fields.map((field) => {
       const base = { uid: field.uid };
-      if (field.hasValue && !overwrite) return { ...base, status: "skip", reason: "already filled" };
+      // A prefilled current company or title is the ATS reading an old resume; it's cleared
+      // when the profile leaves it blank, so it isn't skipped as already filled.
+      const clearing = field.hasValue && CLEAR_WHEN_BLANK.has(heuristicKey(field, data)?.key) && !resolve(heuristicKey(field, data).key, data, { field, job });
+      if (field.hasValue && !overwrite && !clearing) return { ...base, status: "skip", reason: "already filled" };
       if (PHONE_COUNTRY_PICKER.test(field.label || "")) return { ...base, status: "skip", reason: "phone country picker (left as is)" };
 
       const h = heuristicKey(field, data);

@@ -868,8 +868,28 @@
     }
   }
 
+  function clearText(el) {
+    if (!el.value) return true;
+    el.focus();
+    setNativeValue(el, "");
+    fire(el, "input");
+    fire(el, "change");
+    el.blur();
+    return el.value === "";
+  }
+
   async function fillInner(items) {
     const results = await fillPass(items);
+    // Resume parsing (Lever, Greenhouse) can refill a field a few seconds after the upload;
+    // clear the ones left blank on purpose again once it's done.
+    const clears = items.filter((i) => i.status === "fill" && i.plan?.action === "clear");
+    if (clears.length) {
+      await sleep(3000);
+      for (const i of clears) {
+        const entry = registry.get(i.id);
+        if (entry) clearText(entry.el);
+      }
+    }
     // Dropdowns that load their options late or ignore the first pick get one more go,
     // after everything else has settled.
     const failed = new Set(results.filter((r) => !r.ok && registry.get(r.id)?.kind === "combobox").map((r) => r.id));
@@ -908,6 +928,7 @@
         else if (entry.kind === "combobox") ok = await fillCombobox(entry, plan);
         else if (entry.kind === "select") ok = fillSelect(entry, plan.optionIndex);
         else if (entry.kind === "radio" || entry.kind === "checkboxes") ok = fillChoice(entry, plan.optionIndex);
+        else if (plan.action === "clear") ok = clearText(entry.el);
         else if (plan.action === "text") {
           item.expected = textValueFor(entry.el, plan.value, item.key);
           ok = await fillText(entry.el, item.expected);
