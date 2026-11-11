@@ -27,6 +27,7 @@
     { key: "twitter", section: "Links", label: "X / Twitter URL", input: "url", describe: "X (Twitter) profile URL", match: /\btwitter\b|\bx\.com\b/ },
 
     // Location
+    { key: "preferred_locations", section: "Location", label: "Where you'd like to work", placeholder: "Anywhere; New York or the Bay Area preferred", describe: "Where the applicant wants to work: preferred office locations or cities for the job, which location they're applying for (not where they live now)", match: /\b(prefer(red|ence)?|desired?|would like to work|want to work|open to working|willing to work|applying (for|to))\b.*\b(locations?|offices?|cit(y|ies)|sites?)\b|\b(locations?|offices?|cit(y|ies))\b.*\b(prefer(red|ence)?|applying for|interested in|work from|like to work)\b|^(office|work) locations?$/ },
     { key: "location", section: "Location", label: "Current location", derived: true, placeholder: "Defaults to “City, State”", describe: "Where the applicant currently lives, as a single 'City, State' location string", match: /\blocation\b|\bwhere (are|do) you (currently )?(located|live|based|reside)\b|\bcurrent(ly)? (city|residence)\b|\bbased in\b/ },
     { key: "address_line1", section: "Location", label: "Street address", describe: "Street address line 1", match: /\bstreet\b|\baddress( line)? ?1\b|\b(home|mailing|residential|street) address\b|^address$/ },
     { key: "address_line2", section: "Location", label: "Address line 2", describe: "Street address line 2 (apartment, suite, unit)", match: /\baddress( line)? ?2\b|\bapt\b|\bapartment\b|\bsuite\b/ },
@@ -96,13 +97,13 @@
     "how_heard", "salary", "start_date", "today", "years_experience",
     "past_employers", "current_company", "current_title",
     "school", "degree", "major", "gpa",
-    "address_line2", "address_line1", "postal_code", "country", "location", "city", "state",
+    "address_line2", "address_line1", "postal_code", "country", "preferred_locations", "location", "city", "state",
     "phone", "website", "full_name",
   ];
 
   // Fields whose descriptor contains these are never auto-filled by heuristics
   // (emergency contacts, references, referrers, middle names…).
-  const HEURISTIC_EXCLUDE = /\bemergency\b|\breference\b|\breferr(ed|er|ing)\b|\breferral name\b|\bmiddle\b|\bmanager\b|\bsupervisor\b|\bparent\b|\bguardian\b|\bcountry (selector|code)\b|\bdial(ing)? code\b/;
+  const HEURISTIC_EXCLUDE = /\bhigh school\b|\bemergency\b|\breference\b|\breferr(ed|er|ing)\b|\breferral name\b|\bmiddle\b|\bmanager\b|\bsupervisor\b|\bparent\b|\bguardian\b|\bcountry (selector|code)\b|\bdial(ing)? code\b/;
 
   root.JAF_SCHEMA = { FIELDS, HEURISTIC_ORDER, HEURISTIC_EXCLUDE, MONTHS, DECLINE };
 })(typeof globalThis !== "undefined" ? globalThis : this);

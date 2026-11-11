@@ -58,6 +58,13 @@ test("heuristic field detection", () => {
   assert.equal(key("Full name"), "full_name");
   assert.equal(key("LinkedIn Profile"), "linkedin");
   assert.equal(key("Current location"), "location");
+  assert.equal(key("Insert other preferred location(s) and/or further context on preferences"), "preferred_locations");
+  assert.equal(key("Which location are you applying for?"), "preferred_locations");
+  assert.equal(key("What are your preferred office location(s) to work from?"), "preferred_locations");
+  assert.equal(key("Office location"), "preferred_locations");
+  assert.equal(key("Where are you currently located?"), "location");
+  assert.equal(key("High School Name"), undefined);
+  assert.equal(key("Year of High School Graduation"), undefined);
   assert.equal(key("City"), "city");
   assert.equal(key("Expected graduation date"), "graduation_date");
   assert.equal(key("Graduation year"), "graduation_year");
@@ -192,4 +199,22 @@ test("phone respects maxlength; today's date formats", () => {
   assert.equal(formatForField("phone", "415-555-0100", {}, PROFILE), "415-555-0100");
   assert.equal(formatForField("today", "2026-09-23", { inputType: "date" }, PROFILE), "2026-09-23");
   assert.equal(formatForField("today", "2026-09-23", { placeholder: "MM/DD/YYYY" }, PROFILE), "09/23/2026");
+});
+
+test("preferred locations pick an office in the order written", () => {
+  const { pickOption } = globalThis.JAF_VALUES;
+  const offices = ["Denver, CO", "Palo Alto, CA", "New York, NY", "London, UK"].map((label, i) => ({ label, value: String(i) }));
+  const want = "Anywhere; New York or the Bay Area preferred";
+  assert.equal(pickOption(offices, want, "preferred_locations")?.index, 2);
+  assert.equal(pickOption(offices.filter((o) => o.label !== "New York, NY"), want, "preferred_locations")?.index, 1);
+  const any = ["Austin, TX", "No preference"].map((label, i) => ({ label, value: String(i) }));
+  assert.equal(pickOption(any, want, "preferred_locations")?.index, 1);
+  assert.equal(pickOption([{ label: "Austin, TX", value: "a" }], "New York", "preferred_locations"), null);
+});
+
+test("place names match their short forms", () => {
+  const { placeAliases } = globalThis.JAF_VALUES;
+  assert.deepEqual(placeAliases("Ontario"), ["on"]);
+  assert.deepEqual(placeAliases("canada"), ["ca", "can"]);
+  assert.deepEqual(placeAliases("California"), ["ca"]);
 });

@@ -319,8 +319,30 @@
    * Pick the option best matching a desired answer.
    * options: [{label, value}] → returns {index, score} or null.
    */
+  // Nicknames for places people write and job forms spell out.
+  const PLACES = { "bay area": ["san francisco", "sf", "palo alto", "mountain view", "menlo park", "sunnyvale", "san jose", "south san francisco"], "new york": ["nyc", "new york city", "ny"], "la": ["los angeles"] };
+
+  /** A list of preferred places ("Anywhere; New York or the Bay Area preferred") as the
+   *  first option matching any of them, in the order written; "anywhere" matches an
+   *  option like "No preference" or "Any". */
+  function pickPlace(options, desired) {
+    const parts = String(desired).toLowerCase().split(/;|,|\bor\b|\band\b|\//).map((s) => s.replace(/\b(preferred|prefer|ideally|the)\b/g, "").trim()).filter(Boolean);
+    for (const part of parts) {
+      if (/^(any|anywhere|open|flexible|no preference)/.test(part)) continue;
+      const names = [part, ...(PLACES[part] || [])];
+      const i = options.findIndex((o) => names.some((n) => new RegExp(`\\b${n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(o.label || "")));
+      if (i >= 0) return { index: i, score: 0.9 };
+    }
+    if (parts.some((p) => /^(any|anywhere|open|flexible)/.test(p))) {
+      const i = options.findIndex((o) => /\b(no preference|any( location)?|anywhere|open to (any|all)|flexible|all locations)\b/i.test(o.label || ""));
+      if (i >= 0) return { index: i, score: 0.85 };
+    }
+    return null;
+  }
+
   function pickOption(options, desired, key) {
     if (!desired || !options?.length) return null;
+    if (key === "preferred_locations") return pickPlace(options, desired);
     const wantedDegree = key === "degree" ? degreeLevel(desired) : null;
     const wanted = equivalents(desired);
     const nd = normalize(desired);
@@ -361,5 +383,19 @@
     return { index: best.index, score: best.score };
   }
 
-  root.JAF_VALUES = { normalize, tokens, similarity, resolve, formatForField, pickOption, monthNumber, countryFromText, companyMatches, US_STATES };
+  const CA_PROVINCES = { AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New Brunswick", NL: "Newfoundland and Labrador", NS: "Nova Scotia", NT: "Northwest Territories", NU: "Nunavut", ON: "Ontario", PE: "Prince Edward Island", QC: "Quebec", SK: "Saskatchewan", YT: "Yukon" };
+  const COUNTRY_CODES = { canada: ["ca", "can"], "united states": ["us", "usa"], "united kingdom": ["uk", "gb", "gbr"] };
+
+  /** Short forms a place name goes by on job forms: "ontario" gives "on", "canada" "can". */
+  function placeAliases(word) {
+    const w = String(word).toLowerCase();
+    const out = [];
+    for (const [abbr, name] of [...Object.entries(US_STATES), ...Object.entries(CA_PROVINCES)]) {
+      if (name.toLowerCase() === w) out.push(abbr.toLowerCase());
+    }
+    for (const [name, codes] of Object.entries(COUNTRY_CODES)) if (name === w) out.push(...codes);
+    return out;
+  }
+
+  root.JAF_VALUES = { placeAliases, normalize, tokens, similarity, resolve, formatForField, pickOption, monthNumber, countryFromText, companyMatches, US_STATES };
 })(typeof globalThis !== "undefined" ? globalThis : this);

@@ -17,7 +17,7 @@
   const COMBO_HINT = /(^|[^a-z])(select(?!ed|ion)|dropdown|drop-down|combo|autocomplete|auto-complete|typeahead|type-ahead|suggest|picker|chooser|lookup)/i;
   const NOT_COMBO = /date|time|color|phone|tel-input/i;
   const COMBO_PLACEHOLDER = /^\s*(search|select|choose|start typing|type to search)\b/i;
-  const LOOSE_OPTION = "[class*=menu] [class*=option], [class*=dropdown] li, [class*=suggest] li, [class*=results] li, [class*=listbox] li, [class*=autocomplete] li, [class*=options] > *, [data-automation-id=promptOption]";
+  const LOOSE_OPTION = "[class*=menu] [class*=option], [class*=dropdown] li, [class*=suggest] li, [class*=results] li, [class*=listbox] li, [class*=autocomplete] li, [class*=options] > *, [data-automation-id=promptOption], .dropdown-results > .dropdown-location";
   const SELECTED_VALUE = "[class*=single-value], [class*=singleValue], [class*=multi-value], [class*=multiValue], [class*=selected-item], [class*=selectedItem], [data-automation-id=selectedItem]";
 
   let nextId = 1;
@@ -308,10 +308,10 @@
     }
     // Some widgets (Greenhouse's react-select) only open on a full pointer + click sequence.
     pointerClick(target);
-    const opts = await waitForOptions(target, before, 450);
+    const opts = await waitForOptions(target, before, 900);
     if (opts.length) return opts;
     target.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowDown", code: "ArrowDown", keyCode: 40 }));
-    return waitForOptions(target, before, 300);
+    return waitForOptions(target, before, 600);
   }
 
   async function waitForOptions(target, before, timeout) {
@@ -577,7 +577,17 @@
     // Real editing command: frameworks that ignore synthetic events still see this.
     el.focus();
     try { el.select(); } catch {}
-    try { return document.execCommand("insertText", false, value); } catch { return false; }
+    let ok = false;
+    try { ok = document.execCommand("insertText", false, value); } catch {}
+    keyNudge(el, value);
+    return ok;
+  }
+
+  /** A key press for the last character typed: some searches (Lever's location field)
+   *  run on keydown or keyup rather than on input. */
+  function keyNudge(el, value) {
+    const last = String(value).slice(-1);
+    for (const type of ["keydown", "keyup"]) el.dispatchEvent(new KeyboardEvent(type, { bubbles: true, key: last }));
   }
 
   /** Keep a prefilled dial code ("+1") and type the national number after it. */
@@ -605,9 +615,19 @@
     fire(el, "input");
     fire(el, "change");
     if (!stuck()) insertText(el, value);
+    else keyNudge(el, value);
     await sleep(60);
-    const popup = newOptions(el, before);
-    if (popup.length) return pickSuggestion(el, value, popup) && "picked";
+    let popup = newOptions(el, before);
+    // A search box whose suggestions load from the network: wait for them, and if the
+    // full "City, Region" finds nothing, search the city alone.
+    if (!popup.length && /locat|city|address/i.test(`${el.id} ${el.name} ${el.className} ${el.getAttribute("aria-autocomplete") || ""}`)) {
+      popup = (await waitForOptions(el, before, 2500)).filter((o) => !before.has(o));
+      if (!popup.length && String(value).includes(",")) {
+        insertText(el, String(value).split(",")[0].trim());
+        popup = (await waitForOptions(el, before, 2500)).filter((o) => !before.has(o));
+      }
+    }
+    if (popup.length) return (await pickSuggestion(el, value, popup)) && "picked";
     el.blur();
     fire(el, "focusout");
     // Controlled inputs that didn't register the change revert on the next render.
@@ -676,6 +696,8 @@
   /** The suggestion that best matches value, or null if none shares enough of its words. */
   function bestSuggestion(options, value) {
     const wanted = new Set(tokens(value));
+    // "Ontario" should match "ON", "Canada" "CAN", "California" "CA".
+    for (const t of [...wanted]) for (const a of globalThis.JAF_VALUES?.placeAliases?.(t) || []) wanted.add(a);
     if (!wanted.size) return null;
     const exact = options.find((o) => clean(o.textContent).toLowerCase() === clean(value).toLowerCase());
     if (exact) return exact;
@@ -687,7 +709,7 @@
       const score = [hits, -t.length];
       if (score[0] > bestScore[0] || (score[0] === bestScore[0] && score[1] > bestScore[1])) { best = o; bestScore = score; }
     }
-    return bestScore[0] >= Math.ceil(wanted.size / 2) ? best : null;
+    return bestScore[0] >= Math.ceil(tokens(value).length / 2) ? best : null;
   }
 
   async function pickSuggestion(target, value, options) {
@@ -720,12 +742,24 @@
         }
         match = find(await waitForOptions(target, before, 1500)) || find(visibleOptions());
       }
-      if (!match) { closeCombobox(target); return false; }
-      clickOption(match);
-      await sleep(60);
-      target.blur();
-      const now = norm(comboboxValue(target) || (target.matches("button") ? target.textContent : ""));
-      return Boolean(now) && (now === wanted || now.includes(wanted) || wanted.includes(now));
+      const took = () => {
+        const now = norm(comboboxValue(target) || (target.matches("button") ? target.textContent : ""));
+        return Boolean(now) && (now === wanted || now.includes(wanted) || wanted.includes(now));
+      };
+      if (match) {
+        clickOption(match);
+        await sleep(120);
+        target.blur();
+        if (took()) return true;
+      }
+      // Type-to-filter menus (Greenhouse's react-select) only take a picked option: filter
+      // to the wanted text and pick the highlighted match with Enter.
+      if (target.matches("input") && !target.readOnly && (await typeAndEnter(target, entry.options[plan.optionIndex].label))) {
+        await sleep(120);
+        if (took()) return true;
+      }
+      closeCombobox(target);
+      return false;
     }
     // Free-text combobox (autocomplete): type the value, then pick the best suggestion.
     const value = plan.value;
@@ -740,7 +774,17 @@
         fire(target, "input");
       }
     }
-    const options = (await waitForOptions(target, before, 2500)).filter((o) => !before.has(o));
+    let options = (await waitForOptions(target, before, 3500)).filter((o) => !before.has(o));
+    // Location searches (Lever's) often find nothing for "City, Region"; try the city alone.
+    if (!options.length && target.matches("input") && value.includes(",")) {
+      const city = value.split(",")[0].trim();
+      if (!insertText(target, city) || target.value !== city) {
+        setNativeValue(target, city);
+        fire(target, "input");
+      }
+      options = (await waitForOptions(target, before, 3500)).filter((o) => !before.has(o));
+      if (options.length) return (await pickSuggestion(target, value, options)) || (await pickSuggestion(target, city, options));
+    }
     if (!options.length) {
       fire(target, "change");
       target.blur();
@@ -748,7 +792,33 @@
       // Select-style widgets drop typed text that wasn't picked from the list.
       return Boolean(comboboxValue(target));
     }
-    return pickSuggestion(target, value, options);
+    if (await pickSuggestion(target, value, options)) return true;
+    // The click didn't take: pick the best match from the keyboard instead.
+    const best = bestSuggestion(options, value);
+    return best ? typeAndEnter(target, clean(best.textContent)) : false;
+  }
+
+  /** Type text into a filtering combobox, wait for its options, then move to the best
+   *  match with the arrow keys and press Enter, the way a person picks from the keyboard. */
+  async function typeAndEnter(target, text) {
+    const key = (k, code, keyCode) => target.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: k, code, keyCode }));
+    const before = new Set(visibleOptions());
+    target.focus();
+    pointerClick(target);
+    if (!insertText(target, text) || target.value !== text) {
+      setNativeValue(target, text);
+      fire(target, "input");
+    }
+    const options = await waitForOptions(target, before, 3500);
+    if (!options.length) return false;
+    const best = bestSuggestion(options, text) || options[0];
+    const steps = Math.max(0, options.indexOf(best));
+    // react-select focuses the first option; move down to the one wanted.
+    for (let i = 0; i < steps; i++) key("ArrowDown", "ArrowDown", 40);
+    key("Enter", "Enter", 13);
+    await sleep(120);
+    target.blur();
+    return Boolean(comboboxValue(target));
   }
 
   const HIGHLIGHT = { filled: "#22c55e", uncertain: "#f59e0b", failed: "#ef4444", needs: "#3b82f6" };
@@ -799,7 +869,19 @@
   }
 
   async function fillInner(items) {
-    clearHighlights();
+    const results = await fillPass(items);
+    // Dropdowns that load their options late or ignore the first pick get one more go,
+    // after everything else has settled.
+    const failed = new Set(results.filter((r) => !r.ok && registry.get(r.id)?.kind === "combobox").map((r) => r.id));
+    if (!failed.size) return results;
+    await sleep(500);
+    const again = await fillPass(items.filter((i) => failed.has(i.id)), false);
+    const byId = new Map(again.map((r) => [r.id, r]));
+    return results.map((r) => byId.get(r.id) ?? r);
+  }
+
+  async function fillPass(items, fresh = true) {
+    if (fresh) clearHighlights();
     const results = [];
     // Files first: some ATSs (Lever, Greenhouse) parse the resume and prefill fields.
     const ordered = [...items].sort((a, b) => (b.plan?.action === "file") - (a.plan?.action === "file"));
